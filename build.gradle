@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+ def mainClass = "Driver"
+
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+
+
+def configJavaExec = { JavaExec task ->
+    task.main = mainClass
+    task.classpath = sourceSets.main.runtimeClasspath
+    task.standardInput = System.in
+}
+
+jar {
+    manifest {
+        attributes('Main-Class': 'package.Main')
+    }
+}
+
+
+task run(dependsOn: jar, type: JavaExec) {
+    configJavaExec(it)
+}
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
