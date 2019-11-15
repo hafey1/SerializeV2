@@ -9,6 +9,11 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
 
 def configJavaExec = { JavaExec task ->
     task.main = mainClass

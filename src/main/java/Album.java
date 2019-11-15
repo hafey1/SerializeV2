@@ -16,6 +16,8 @@ public class Album implements Comparable<Album> {
 	private String yearReleased;
 	private String personalRating;
 
+	public Album() {this(DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE);}
+
 	//this calls the construtor with all four attributes
 	public Album(String albumName, String artistName, String yearReleased, String personalRating) {
 		this.albumName = albumName;
@@ -86,9 +88,9 @@ public class Album implements Comparable<Album> {
 
 		serializer.write(csvLine, 0, csvLine.length());
 
-		fileStream.close();
-		outStream.close();
 		serializer.close();
+		outStream.close();
+		fileStream.close();
 
 	}
 
@@ -111,7 +113,7 @@ public class Album implements Comparable<Album> {
 	public boolean equals(Object o) {
 		boolean isEqual = false;
 
-		if (this.equals(o)) {
+		if (o instanceof Album) {
 
 			if (getClass() == o.getClass()) {
 				Album album = (Album) o;
@@ -120,7 +122,7 @@ public class Album implements Comparable<Album> {
 		}
 
 		return isEqual;
-
+	}
 
 	//for possible console log depbugging
 	@Override
