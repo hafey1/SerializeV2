@@ -51,7 +51,7 @@ public class Album implements Comparable<Album> {
 		return personalRating;
 	}
 
-	public static Album deserializetoCSV(String pathName) throws IOException{
+	public static Album deserializefromCSV(String pathName) throws IOException{
 			//create the path, the line reader
 			Path incomingPath = Paths.get(pathName);
 			BufferedReader csvLineReader = Files.newBufferedReader(incomingPath);
@@ -78,12 +78,16 @@ public class Album implements Comparable<Album> {
 
 	public static void serializetoCSV(Album outGoingAlbum, String pathName) throws IOException {
 
-		BufferedWriter serializer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(pathName), StandardCharsets.UTF_8));
+		FileOutputStream fileStream = new FileOutputStream(pathName);
+		OutputStreamWriter outStream = new OutputStreamWriter(fileStream, StandardCharsets.UTF_8);
+		BufferedWriter serializer = new BufferedWriter(outStream);
 
 		String csvLine = outGoingAlbum.getAlbumName() + "," + outGoingAlbum.getArtistName() + "," + outGoingAlbum.getYearReleased() + "," + outGoingAlbum.getPersonalRating() + "\n";
 
 		serializer.write(csvLine, 0, csvLine.length());
 
+		fileStream.close();
+		outStream.close();
 		serializer.close();
 
 	}
@@ -105,17 +109,18 @@ public class Album implements Comparable<Album> {
 	//equality between two albums will be determined if the album name strings are the same;
 	@Override
 	public boolean equals(Object o) {
-		//if the reference is the same it is equal
-		if (this == o) return true;
+		boolean isEqual = false;
 
-		// if the object is null or not of the same class
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this.equals(o)) {
 
-		//else do the check of the two objects fields
-		Album album = (Album) o;
-		return albumName.equals(album.albumName) &&
-				artistName.equals(album.artistName);
-	}
+			if (getClass() == o.getClass()) {
+				Album album = (Album) o;
+				isEqual = albumName.equals(album.albumName) && artistName.equals(album.artistName);
+			}
+		}
+
+		return isEqual;
+
 
 	//for possible console log depbugging
 	@Override

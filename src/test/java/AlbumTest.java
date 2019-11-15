@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 public class AlbumTest {
 
 	@Test
-	public void deserializetoCSV() {
+	public void deserializefromCSV() {
 
 
 	}
