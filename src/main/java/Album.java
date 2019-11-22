@@ -1,8 +1,7 @@
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
 //albumName singular
 //create test file under source for junit testing
@@ -53,10 +52,11 @@ public class Album implements Comparable<Album> {
 		return personalRating;
 	}
 
-	public static Album deserializefromCSV(String pathName) throws IOException{
+
+	public static Album deserializefromCSV(Path tempFile) throws IOException{
 			//create the path, the line reader
-			Path incomingPath = Paths.get(pathName);
-			BufferedReader csvLineReader = Files.newBufferedReader(incomingPath);
+			BufferedReader csvLineReader = Files.newBufferedReader(tempFile, StandardCharsets.UTF_8);
+
 
 			//write to a string, split up the phrases by commas
 			//first is albumName name, second is artist name
@@ -78,19 +78,15 @@ public class Album implements Comparable<Album> {
 	}
 
 
-	public static void serializetoCSV(Album outGoingAlbum, String pathName) throws IOException {
+	public static void serializetoCSV(Album outGoingAlbum, Path tempFile) throws IOException {
 
-		FileOutputStream fileStream = new FileOutputStream(pathName);
-		OutputStreamWriter outStream = new OutputStreamWriter(fileStream, StandardCharsets.UTF_8);
-		BufferedWriter serializer = new BufferedWriter(outStream);
+		BufferedWriter serializer = Files.newBufferedWriter(tempFile, StandardCharsets.UTF_8);
 
 		String csvLine = outGoingAlbum.getAlbumName() + "," + outGoingAlbum.getArtistName() + "," + outGoingAlbum.getYearReleased() + "," + outGoingAlbum.getPersonalRating() + "\n";
 
 		serializer.write(csvLine, 0, csvLine.length());
 
 		serializer.close();
-		outStream.close();
-		fileStream.close();
 
 	}
 
@@ -115,10 +111,8 @@ public class Album implements Comparable<Album> {
 
 		if (o instanceof Album) {
 
-			if (getClass() == o.getClass()) {
 				Album album = (Album) o;
 				isEqual = albumName.equals(album.albumName) && artistName.equals(album.artistName);
-			}
 		}
 
 		return isEqual;
