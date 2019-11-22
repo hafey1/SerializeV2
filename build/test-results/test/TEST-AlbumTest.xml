@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="AlbumTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-11-22T02:32:34" hostname="autobot" time="0.325">
-  <properties/>
-  <testcase name="SerializingToAndDeserializingFromCSVTest" classname="AlbumTest" time="0.325"/>
-  <system-out><![CDATA[Testing for Serializing and Deserializing an Object
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
