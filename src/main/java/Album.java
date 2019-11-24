@@ -1,11 +1,13 @@
+import com.thoughtworks.xstream.XStream;
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
 //albumName singular
 //create test file under source for junit testing
-public class Album implements Comparable<Album> {
+public class Album implements Comparable<Album>, Serializable {
+
+	private static final long serialVersionUID = 7526473295692576147L;
 	//this is the state of the class
 	// every object must have an albumName entry
 	// would like to compare by rating, but comparisons by albumName are guaranteed
@@ -90,6 +92,52 @@ public class Album implements Comparable<Album> {
 
 	}
 
+	public static void binarySerialize(Album outgoingAlbum, Path pathToWriteTo) throws IOException {
+		//turning the object into a byte array;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput output = new ObjectOutputStream(bos);
+
+		output.writeObject(outgoingAlbum);
+		bos.close();
+		output.close();
+
+		byte[] bytesOfAlbum = bos.toByteArray();
+
+		Files.write(pathToWriteTo, bytesOfAlbum);
+	}
+
+	public static Album binaryDeserialize(Path pathToReadFrom) throws IOException, ClassNotFoundException {
+		byte[] bytesofAlbum = Files.readAllBytes(pathToReadFrom);
+		ByteArrayInputStream bis = new ByteArrayInputStream(bytesofAlbum);
+		//ByteBuffer byteBuffer = ByteBuffer.wrap(bytesofAlbum);
+		ObjectInput incomingAlbumInput = new ObjectInputStream(bis);
+		Album incomingAlbum = (Album) incomingAlbumInput.readObject();
+		return incomingAlbum;
+	}
+
+	public static void XMLSerialize(Album outGoingAlbum, Path tempFile) throws IOException {
+		XStream xStream = new XStream();
+		xStream.alias("Album", Album.class);
+
+		String albumLine = xStream.toXML(outGoingAlbum);
+		BufferedWriter serializer = Files.newBufferedWriter(tempFile, StandardCharsets.UTF_8);
+		serializer.write(albumLine, 0, albumLine.length());
+
+		serializer.close();
+	}
+
+	public static Album XMLDeserialize(Path tempFile) throws IOException
+	{
+		XStream instream = new XStream();
+//		BufferedReader xmlLineReader = Files.newBufferedReader(tempFile, StandardCharsets.UTF_8);
+//		StringBuffer buffer = new StringBuffer();
+//		String albumState;
+//		while((albumState = xmlLineReader.readLine()) != null) {
+//			buffer.append(albumState);
+//		}
+		Album outGoingAlbum = (Album)instream.fromXML(Files.newBufferedReader(tempFile, StandardCharsets.UTF_8));
+		return outGoingAlbum;
+	}
 	//this will enforce ordering by album name
 	@Override
 	public int compareTo(Album compared) {
