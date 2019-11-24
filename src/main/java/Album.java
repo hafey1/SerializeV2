@@ -129,13 +129,9 @@ public class Album implements Comparable<Album>, Serializable {
 	public static Album XMLDeserialize(Path tempFile) throws IOException
 	{
 		XStream instream = new XStream();
-//		BufferedReader xmlLineReader = Files.newBufferedReader(tempFile, StandardCharsets.UTF_8);
-//		StringBuffer buffer = new StringBuffer();
-//		String albumState;
-//		while((albumState = xmlLineReader.readLine()) != null) {
-//			buffer.append(albumState);
-//		}
-		Album outGoingAlbum = (Album)instream.fromXML(Files.newBufferedReader(tempFile, StandardCharsets.UTF_8));
+		BufferedReader bufferedReader = Files.newBufferedReader(tempFile, StandardCharsets.UTF_8);
+		Album outGoingAlbum = (Album)instream.fromXML(bufferedReader);
+		bufferedReader.close();
 		return outGoingAlbum;
 	}
 	//this will enforce ordering by album name
