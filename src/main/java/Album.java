@@ -68,12 +68,15 @@ public class Album implements Comparable<Album>, Serializable {
 			Album createdAlbum = new Album(DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE, DEFAULT_VALUE);
 			if (csvLineReader.ready()) {
 				currLine = csvLineReader.readLine();
+
+				if (currLine != null) {
 				String[] albumInfoSplit = currLine.split(",");
 
 				createdAlbum.setAlbumName(albumInfoSplit[0]);
 				createdAlbum.setArtistName(albumInfoSplit[1]);
 				createdAlbum.setYearReleased(albumInfoSplit[2]);
 				createdAlbum.setPersonalRating(albumInfoSplit[3]);
+				}
 			}
 			csvLineReader.close();
 			return createdAlbum;
@@ -156,7 +159,7 @@ public class Album implements Comparable<Album>, Serializable {
 		if (o instanceof Album) {
 
 				Album album = (Album) o;
-				isEqual = albumName.equals(album.albumName) && artistName.equals(album.artistName);
+				isEqual = albumName.compareToIgnoreCase(album.albumName) == 0 && artistName.compareToIgnoreCase(album.artistName) == 0;
 		}
 
 		return isEqual;
